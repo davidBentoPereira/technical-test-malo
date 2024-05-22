@@ -4,11 +4,21 @@ class ArticlesController < ApplicationController
   # GET /articles or /articles.json
   def index
     @q = Article.ransack(params[:q])
-    @articles = @q.result(distinct: true)
 
-    if params[:q] && params[:q][:title_or_content_or_tags_cont]
+    if params[:q]
       query = params[:q][:title_or_content_or_tags_cont]
-      @articles = filter_articles_with_tags_only_having_hash_tags(@articles, query)
+      query = "%#{query}%"
+
+      @articles = Article.where("title ILIKE ? OR content ILIKE ?", query, query)
+                         .or(
+                           Article.where(
+                             id: Article.select(:id)
+                                        .joins("CROSS JOIN LATERAL unnest(string_to_array(articles.tags, ', ')) AS tag")
+                                        .where("tag ILIKE ? AND tag !~ '^#'", query)
+                           )
+                         )
+    else
+      @articles = @q.result(distinct: true)
     end
   end
 
@@ -64,17 +74,6 @@ class ArticlesController < ApplicationController
   end
 
   private
-
-  def filter_articles_with_tags_only_having_hash_tags(articles, query)
-    articles.select do |article|
-      tags = reject_tags_with_hash_tags(article.tags)
-      tags.any? { |tag| tag.include?(query) } || article.title.include?(query) || article.content.include?(query)
-    end
-  end
-
-  def reject_tags_with_hash_tags(tags_string)
-    tags_string.split(", ").reject { |tag| tag.start_with?("#") }
-  end
 
   # Use callbacks to share common setup or constraints between actions.
   def set_article
