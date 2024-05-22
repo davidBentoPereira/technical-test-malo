@@ -2,6 +2,16 @@
 
 <h1>Articles</h1>
 
+<%= search_form_for @q do |f| %>
+  <%= f.label :title_or_content_or_tags_cont %>
+  <%= f.search_field :title_or_content_or_tags_cont %>
+
+  <%#= f.label :title_or_content_or_tags %>
+  <%#= f.search_field :title_or_content_or_tags %>
+
+  <%= f.submit %>
+<% end %>
+
 <div id="articles">
   <% @articles.each do |article| %>
     <%= render article %>
