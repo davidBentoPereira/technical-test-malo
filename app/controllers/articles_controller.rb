@@ -6,17 +6,8 @@ class ArticlesController < ApplicationController
     @q = Article.ransack(params[:q])
 
     if params[:q]
-      query = params[:q][:title_or_content_or_tags_cont]
-      query = "%#{query}%"
-
-      @articles = Article.where("title ILIKE ? OR content ILIKE ?", query, query)
-                         .or(
-                           Article.where(
-                             id: Article.select(:id)
-                                        .joins("CROSS JOIN LATERAL unnest(string_to_array(articles.tags, ', ')) AS tag")
-                                        .where("tag ILIKE ? AND tag !~ '^#'", query)
-                           )
-                         )
+      query = "%#{params[:q][:title_or_content_or_tags_cont]}%"
+      @articles = Article.query_on_title_or_content_or_tags_without_hashtag(query)
     else
       @articles = @q.result(distinct: true)
     end
