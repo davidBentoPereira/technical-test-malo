@@ -3,21 +3,23 @@
 <h1>Articles</h1>
 
 <%= search_form_for @q do |f| %>
-  <%= f.label :title_or_content_or_tags_cont %>
+  <%= f.label "Search" %>
   <%= f.search_field :title_or_content_or_tags_cont %>
 
-  <%#= f.label :title_or_content_or_tags %>
-  <%#= f.search_field :title_or_content_or_tags %>
-
   <%= f.submit %>
+
+  <%= link_to root_path do  %>
+    <%= button_to "Clear" %>
+  <% end %>
+<% end %>
+
+<% if params[:q] %>
+  <p><%= @articles.count %> articles trouvés</p>
 <% end %>
 
 <div id="articles">
   <% @articles.each do |article| %>
     <%= render article %>
-    <p>
-      <%= link_to "Show this article", article %>
-    </p>
   <% end %>
 </div>
 

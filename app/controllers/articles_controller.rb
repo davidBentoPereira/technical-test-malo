@@ -5,6 +5,11 @@ class ArticlesController < ApplicationController
   def index
     @q = Article.ransack(params[:q])
     @articles = @q.result(distinct: true)
+
+    if params[:q] && params[:q][:title_or_content_or_tags_cont]
+      query = params[:q][:title_or_content_or_tags_cont]
+      @articles = filter_articles_with_tags_only_having_hash_tags(@articles, query)
+    end
   end
 
   # GET /articles/1 or /articles/1.json
@@ -59,13 +64,25 @@ class ArticlesController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_article
-      @article = Article.find(params[:id])
-    end
 
-    # Only allow a list of trusted parameters through.
-    def article_params
-      params.require(:article).permit(:title, :content, :feature_image, :tags)
+  def filter_articles_with_tags_only_having_hash_tags(articles, query)
+    articles.select do |article|
+      tags = reject_tags_with_hash_tags(article.tags)
+      tags.any? { |tag| tag.include?(query) } || article.title.include?(query) || article.content.include?(query)
     end
+  end
+
+  def reject_tags_with_hash_tags(tags_string)
+    tags_string.split(", ").reject { |tag| tag.start_with?("#") }
+  end
+
+  # Use callbacks to share common setup or constraints between actions.
+  def set_article
+    @article = Article.find(params[:id])
+  end
+
+  # Only allow a list of trusted parameters through.
+  def article_params
+    params.require(:article).permit(:title, :content, :feature_image, :tags)
+  end
 end

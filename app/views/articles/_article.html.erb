@@ -1,4 +1,4 @@
-<div id="<%= dom_id article %>">
+<div id="<%= dom_id article %>" style="background-color: lightgray; padding: 10px; margin-bottom: 2em; ">
   <p>
     <strong>Title:</strong>
     <%= article.title %>
@@ -18,5 +18,7 @@
     <strong>Tags:</strong>
     <%= article.tags %>
   </p>
+
+  <p><%= link_to "Show this article", article %></p>
 
 </div>
