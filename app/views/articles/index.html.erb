@@ -12,31 +12,44 @@
 
     <!-- Search Form -->
     <%= search_form_for @q do |f| %>
-      <%= f.label "Search" %>
-      <%= f.search_field :title_or_content_or_tags_cont %>
+      <div class="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+        <div class="sm:col-span-2">
+          <!-- Input Search -->
+          <%= f.label "Search", class: "block text-sm font-medium leading-6 text-gray-900" %>
+          <div class="mt-2">
+            <%= f.search_field :title_or_content_or_tags_cont, class: "block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" %>
+          </div>
+          <div class="mt-2">
+            <!-- Submit -->
+            <%= f.submit "Chercher", class: "rounded bg-white px-2 py-1 text-xs font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"%>
+            <!-- Button clear filter -->
+            <%= link_to root_path do  %>
+              <button type="button" class="rounded bg-white px-2 py-1 text-xs font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">Réinitialiser la recherche</button>
+            <% end %>
+          </div>
 
-      <%= f.submit %>
+          <!-- Search Results Counter -->
+          <div class="mt-2">
+            <% if params[:q] %>
+              <p class="text-sm text-gray-500"><%= @articles.count %> articles trouvés</p>
+            <% end %>
+          </div>
+        </div>
+      </div>
 
-      <%= link_to root_path do  %>
-        <%= button_to "Clear" %>
-      <% end %>
+      <!-- Button "Add article" -->
+      <div class="text-right">
+        <%= link_to new_article_path do %>
+          <button type="button" class="inline-flex items-center gap-x-1.5 rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+            Ajouter un article
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="-mr-0.5 h-5 w-5">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+            </svg>
+          </button>
+        <% end %>
+      </div>
+
     <% end %>
-
-    <% if params[:q] %>
-      <p><%= @articles.count %> articles trouvés</p>
-    <% end %>
-
-    <!-- Button "Add article" -->
-    <div class="text-right mt-5">
-      <%= link_to new_article_path do %>
-        <button type="button" class="inline-flex items-center gap-x-1.5 rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
-          Ajouter un article
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="-mr-0.5 h-5 w-5">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-          </svg>
-        </button>
-      <% end %>
-    </div>
 
     <div class="mx-auto grid max-w-2xl grid-cols-1 gap-x-8 gap-y-16 border-t border-gray-200 pt-10 sm:mt-16 sm:pt-16 lg:mx-0 lg:max-w-none lg:grid-cols-3">
       <!-- Articles -->
