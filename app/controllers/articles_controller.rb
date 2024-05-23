@@ -3,13 +3,11 @@ class ArticlesController < ApplicationController
 
   # GET /articles or /articles.json
   def index
-    @q = Article.ransack(params[:q])
-
-    if params[:q]
-      query = params[:q][:title_or_content_or_tags_cont]
-      @articles = Article.query_on_title_or_content_or_tags_without_hashtag(query)
+    @query = params[:title_or_content_or_tags_cont] || nil
+    if @query
+      @articles = Article.query_on_title_or_content_or_tags_without_hashtag(@query)
     else
-      @articles = @q.result(distinct: true)
+      @articles = Article.all
     end
   end
 
