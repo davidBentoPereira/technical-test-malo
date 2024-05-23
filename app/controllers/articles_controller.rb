@@ -6,7 +6,7 @@ class ArticlesController < ApplicationController
     @q = Article.ransack(params[:q])
 
     if params[:q]
-      query = "%#{params[:q][:title_or_content_or_tags_cont]}%"
+      query = params[:q][:title_or_content_or_tags_cont]
       @articles = Article.query_on_title_or_content_or_tags_without_hashtag(query)
     else
       @articles = @q.result(distinct: true)

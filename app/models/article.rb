@@ -7,12 +7,15 @@ class Article < ApplicationRecord
     %w[title content tags]
   end
 
-  scope :query_on_title_or_content_or_tags_without_hashtag, ->(query) { Article.where("title ILIKE ? OR content ILIKE ?", query, query)
-                    .or(
-                      Article.where(
-                        id: Article.select(:id)
-                                   .joins("CROSS JOIN LATERAL unnest(string_to_array(articles.tags, ', ')) AS tag")
-                                   .where("tag ILIKE ? AND tag !~ '^#'", query)
-                      )
-                    ) }
+  scope :query_on_title_or_content_or_tags_without_hashtag, ->(query) {
+    query = "%#{query}%"
+    Article.where("title ILIKE :query OR content ILIKE :query", query: query)
+           .or(
+             Article.where(
+               id: Article.select(:id)
+                          .from("articles, UNNEST(string_to_array(articles.tags, ', ')) AS tag")
+                          .where("tag ILIKE ? AND tag !~ '^#'", query)
+             )
+           )
+  }
 end
