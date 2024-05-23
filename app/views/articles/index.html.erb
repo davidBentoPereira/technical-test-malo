@@ -1,26 +1,53 @@
-<p style="color: green"><%= notice %></p>
+<div class="bg-white py-24 sm:py-32">
+  <div class="mx-auto max-w-7xl px-6 lg:px-8">
+    <div class="mx-auto max-w-2xl text-center">
+      <h2 class="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">Nos articles</h2>
+      <p class="mt-2 text-lg leading-8 text-gray-600">Apprenez comment aider votre enfant à grandir en bonne santé !</p>
+    </div>
 
-<h1>Articles</h1>
+    <!-- Errors -->
+    <div>
+      <p style="color: green"><%= notice %></p>
+    </div>
 
-<%= search_form_for @q do |f| %>
-  <%= f.label "Search" %>
-  <%= f.search_field :title_or_content_or_tags_cont %>
+    <!-- Search Form -->
+    <%= search_form_for @q do |f| %>
+      <%= f.label "Search" %>
+      <%= f.search_field :title_or_content_or_tags_cont %>
 
-  <%= f.submit %>
+      <%= f.submit %>
 
-  <%= link_to root_path do  %>
-    <%= button_to "Clear" %>
-  <% end %>
-<% end %>
+      <%= link_to root_path do  %>
+        <%= button_to "Clear" %>
+      <% end %>
+    <% end %>
 
-<% if params[:q] %>
-  <p><%= @articles.count %> articles trouvés</p>
-<% end %>
+    <% if params[:q] %>
+      <p><%= @articles.count %> articles trouvés</p>
+    <% end %>
 
-<div id="articles">
-  <% @articles.each do |article| %>
-    <%= render article %>
-  <% end %>
+    <!-- Button "Add article" -->
+    <div class="text-right mt-5">
+      <%= link_to new_article_path do %>
+        <button type="button" class="inline-flex items-center gap-x-1.5 rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+          Ajouter un article
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="-mr-0.5 h-5 w-5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+          </svg>
+        </button>
+      <% end %>
+    </div>
+
+    <div class="mx-auto grid max-w-2xl grid-cols-1 gap-x-8 gap-y-16 border-t border-gray-200 pt-10 sm:mt-16 sm:pt-16 lg:mx-0 lg:max-w-none lg:grid-cols-3">
+      <!-- Articles -->
+      <% @articles.each do |article| %>
+        <%= render article %>
+      <% end %>
+    </div>
+  </div>
 </div>
 
-<%= link_to "New article", new_article_path %>
+
+
+
+

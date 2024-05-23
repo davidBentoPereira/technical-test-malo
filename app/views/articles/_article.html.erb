@@ -1,24 +1,26 @@
-<div id="<%= dom_id article %>" style="background-color: lightgray; padding: 10px; margin-bottom: 2em; ">
-  <p>
-    <strong>Title:</strong>
-    <%= article.title %>
-  </p>
-
-  <p>
-    <strong>Feature image:</strong>
-    <%= image_tag article.feature_image, width: 200 %>
-  </p>
-
-  <p>
-    <strong>Content:</strong>
-    <%= article.content %>
-  </p>
-
-  <p>
-    <strong>Tags:</strong>
-    <%= article.tags %>
-  </p>
-
-  <p><%= link_to "Show this article", article %></p>
-
-</div>
+<article class="flex flex-col items-start justify-between" id="<% dom_id(article) %>">
+  <div class="relative w-full">
+    <%= image_tag article.feature_image,  alt: "", class: "aspect-[16/9] w-full rounded-2xl bg-gray-100 object-cover sm:aspect-[2/1] lg:aspect-[3/2]" %>
+    <div class="absolute inset-0 rounded-2xl ring-1 ring-inset ring-gray-900/10"></div>
+  </div>
+  <div class="max-w-xl">
+    <div class="mt-8 text-xs flex flex-nowrap">
+      <p class="relative z-10 rounded-full bg-gray-50 px-2 py-1 font-small text-gray-600 hover:bg-gray-100">
+        <% article.tags.split(", ").reject { |tag| tag.start_with?("#") }.each do |tag| %>
+          <span class="mx-1">#<%= tag %></span>
+        <% end %>
+      </p>
+    </div>
+    <div class="group relative">
+      <h3 class="mt-3 text-lg font-semibold leading-6 text-gray-900 group-hover:text-gray-600">
+        <%= link_to article.title, article %>
+      </h3>
+      <p class="mt-5 line-clamp-3 text-sm leading-6 text-gray-600">
+        <%= sanitize(article.content, tags: %w(strong em a p br ul li ol span div h1 h2 h3 h4 h5 h6), attributes: %w(href title style)) %>
+      </p>
+      <p class="mt-3">
+        <%= link_to "Voir l'article", article, class: "rounded-full bg-indigo-600 px-2.5 py-1 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600" %>
+      </p>
+    </div>
+  </div>
+</article>
